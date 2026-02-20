@@ -165,9 +165,12 @@ function transformTelegramText(text) {
             case 'strike':
                 parts.push('~' + escaped + '~');
                 break;
-            case 'bare_url':
-                parts.push(token.text);
+            case 'bare_url': {
+                const escapedDisplay = token.text.replace(TELEGRAM_SPECIAL, '\\$1');
+                const escapedHref = token.text.replace(/([)\\])/g, '\\$1');
+                parts.push('[' + escapedDisplay + '](' + escapedHref + ')');
                 break;
+            }
             case 'link': {
                 const escapedUrl = (token.url || '').replace(/([)\\])/g, '\\$1');
                 parts.push('[' + escaped + '](' + escapedUrl + ')');
